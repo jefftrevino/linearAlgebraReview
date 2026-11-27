@@ -1,0 +1,702 @@
+% Math 51 self-study: Chapter 1 exercises (Section 1.8)
+% Textbook: "Linear Algebra, Multivariable Calculus, and Modern Applications"
+% (Stanford Math 51, version of March 25, 2021).
+% The exercise statements below are paraphrased; check each against the book.
+%
+% Compile with:  latexmk -pdf chapter01.tex
+%
+% ---------- Example: how to write a solution ----------
+% Each solution starts with the final answer inside an answer box,
+% then gives the explanation as ordinary text after the box.
+% (This example is a comment, so it does not appear in the PDF.)
+% An answer box can hold several lines of sentences and displayed equations
+% written with \[...\]. Two limits come from the varwidth package, which
+% shrinks the box to fit: a blank line starts a new line but prints no empty
+% line, and align* is pushed to the right instead of centered.
+%
+%   \begin{solution}
+%   \begin{enumerate}
+%     \item
+%       \begin{answer}
+%         $2\begin{bmatrix} 1 \\ 3 \end{bmatrix}
+%         + \begin{bmatrix} 4 \\ -1 \end{bmatrix}
+%         = \begin{bmatrix} 6 \\ 5 \end{bmatrix}$
+%       \end{answer}
+%       Scalar multiplication multiplies each entry by 2, giving $(2, 6)$
+%       (Definition 1.3.2). Vector addition then adds matching entries:
+%       $2 + 4 = 6$ and $6 + (-1) = 5$ (Definition 1.3.1).
+%     \item
+%       \begin{answer}
+%         $\norm{\vect{v}} = 5$
+%       \end{answer}
+%       Explanation for part (b) goes here.
+%   \end{enumerate}
+%   \end{solution}
+
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}  % page margins
+\usepackage{amsmath,amssymb}       % bmatrix, align, \mathbb, etc.
+\usepackage{amsthm}                % theorem-style environments
+\usepackage{enumitem}              % (a), (b), (c) lists
+\usepackage{varwidth}              % boxes that shrink to fit their contents
+\usepackage[most]{tcolorbox}       % boxes; [most] enables page-breaking boxes
+
+% ---------- Notation ----------
+\newcommand{\R}{\mathbb{R}}                    % the real numbers
+\newcommand{\vect}[1]{\mathbf{#1}}             % bold vector: \vect{v}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert} % length: \norm{\vect{v}}
+
+% Row spacing in bmatrix (and every other array): n times the normal height
+\renewcommand{\arraystretch}{1.2}
+
+% ---------- Exercise and solution environments ----------
+\theoremstyle{definition}
+\newtheorem*{exercise}{Exercise}               % numbered by hand below
+% \leavevmode\par puts "Solution." on a line of its own, so the first
+% answer box has the full line width to itself.
+\newenvironment{solution}
+  {\begin{proof}[Solution]\leavevmode\par}
+  {\end{proof}}
+
+% Answer box: white background, sharp black border.
+% hbox and varwidth upper make the box only as wide as its widest line.
+% The box can still hold several lines and \[...\] displayed equations;
+% text wraps once it reaches the maximum width, \linewidth-28pt. The 28pt
+% leaves room for the border and padding, so the box stays inside the margin.
+% nobeforeafter keeps the box on the same line as the (a), (b) label.
+% baseline sets how far the label's line sits above the box's bottom edge:
+% the box's height (\tcb@height) minus the border (0.8pt), the top padding
+% (4pt), and the height of one line of text (\ht\strutbox). This lines the
+% label up with the first line of text inside the box.
+% \tcb@height contains @, which LaTeX allows in a name only between
+% \makeatletter and \makeatother.
+% parbox=false lets blank lines inside the box start new paragraphs, each on
+% a new line with no space between paragraphs.
+\makeatletter
+\newtcolorbox{answer}{colback=white, colframe=black,
+  boxrule=0.8pt, arc=0pt, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  hbox, varwidth upper=\linewidth-28pt, nobeforeafter, parbox=false,
+  baseline=\tcb@height-4.8pt-\ht\strutbox,
+  after=\par\medskip}
+\makeatother
+
+\setlist[enumerate,1]{label=(\alph*)}
+
+\title{Math 51, Chapter 1 Exercises\\
+  \large Vectors, vector addition, and scalar multiplication (Section 1.8)}
+\author{Jeff Trevino}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% =====================================================================
+\section*{Exercise 1.1}
+\begin{exercise}
+Practice using your PDF viewer's ``back'' command to return to your place after
+following a cross-reference link in the book, and try it on the book's link to
+a picture of an ellipse. (Nothing to submit.)
+
+This back command works only in a PDF downloaded to your computer, not when
+reading the book in a web browser. The book suggests downloading a fresh copy
+every week, because small corrections (such as typo fixes) are made over time.
+\end{exercise}
+
+% =====================================================================
+\section*{Exercise 1.2}
+\begin{exercise}
+Write each expression as a single column vector.
+\begin{enumerate}
+  \item $3\begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}
+        - 2\begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}
+        + 5\begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$
+  \item $\begin{bmatrix} 4 \\ -1 \\ 2 \\ 7 \end{bmatrix}
+        - 3\begin{bmatrix} 2 \\ 0 \\ -1 \\ 1 \end{bmatrix}
+        + 2\begin{bmatrix} 4 \\ -5 \\ 3 \\ 1 \end{bmatrix}$
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item
+       \begin{answer}
+         $\begin{bmatrix} 3 \\ -2 \\ 5 \end{bmatrix}$
+       \end{answer}
+       Scalar multiplication multiplies each entry by the scalar (Definition 1.3.2); vector addition adds matching entries (Definition 1.3.1).
+     \item
+       \begin{answer}
+         $\begin{bmatrix} 6 \\ -11 \\ 11 \\ 6 \end{bmatrix}$
+       \end{answer}
+       As in (a), multiply each vector's entries by its scalar and then add matching entries.
+\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.3}
+\begin{exercise}
+The geometric meaning of the algebra in this exercise is explained later, in
+Figure~3.1.2, by drawing a grid of parallelograms on a plane.
+\begin{enumerate}
+  \item Find scalars $t$ and $t'$ with
+        $t\begin{bmatrix} 1 \\ 2 \end{bmatrix}
+        + t'\begin{bmatrix} 2 \\ 3 \end{bmatrix}
+        = \begin{bmatrix} 4 \\ 5 \end{bmatrix}$.
+        (Hint: compare entries on both sides to get two equations in two unknowns.)
+  \item Find scalars $t$ and $t'$ with
+        $t\begin{bmatrix} 1 \\ 2 \end{bmatrix}
+        + t'\begin{bmatrix} 2 \\ 3 \end{bmatrix}
+        = \begin{bmatrix} -2 \\ -1 \end{bmatrix}$.
+  \item For arbitrary $x$ and $y$, find $t$ and $t'$ in terms of $x$ and $y$ with
+        $t\begin{bmatrix} 1 \\ 2 \end{bmatrix}
+        + t'\begin{bmatrix} 2 \\ 3 \end{bmatrix}
+        = \begin{bmatrix} x \\ y \end{bmatrix}$.
+        Check that $(x,y) = (4,5)$ gives your answer to (a) and
+        $(x,y) = (-2,-1)$ gives your answer to (b).
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item
+  	 \begin{answer}
+         $t = -2$ and $ t' = 3$.
+       \end{answer}
+       Scalar multiplication multiplies each entry by the scalar (Definition 1.3.2) and vector addition adds matching entries (Definition 1.3.1), which gives
+       
+       $\begin{bmatrix} t \\ 2t \end{bmatrix} +
+       \begin{bmatrix} 2t' \\ 3t' \end{bmatrix} =
+       \begin{bmatrix} 4 \\ 5 \end{bmatrix}$
+       
+       Because vectors are equal when their matching entries are equal (Definition 1.1.2), we have two equations of two unknowns,
+       
+       $t + 2t' = 4$
+       
+       $2t + 3t' = 5$
+       
+       and we can solve by isolating the unknowns. Subtracting 2 times the first equation from the second gives $t' = 3$; substituting into the first equation gives $t = -2$. We confirm that  $-2\begin{bmatrix} 1 \\ 2 \end{bmatrix} + 3\begin{bmatrix} 2 \\ 3 \end{bmatrix}  = \begin{bmatrix} 4 \\ 5 \end{bmatrix}$.
+
+       
+       
+  \item \begin{answer}
+         $t = 4$ and $ t' = -3$.
+       \end{answer}
+      Scalar multiplication multiplies each entry by the scalar (Definition 1.3.2) and vector addition adds matching entries (Definition 1.3.1), which gives
+       
+       $\begin{bmatrix} t \\ 2t \end{bmatrix} +
+       \begin{bmatrix} 2t' \\ 3t' \end{bmatrix} =
+       \begin{bmatrix} -2 \\ -1 \end{bmatrix}$
+       
+       We have two equations of two unknowns,
+       
+       $t + 2t' = -2$
+       
+       $2t + 3t' = -1$
+       
+       and we can solve by isolating the unknowns. Subtracting 2 times the first equation from the second gives $t' = -3$; substituting into the first equation gives $t = 4$. We confirm that  $4\begin{bmatrix} 1 \\ 2 \end{bmatrix} - 3\begin{bmatrix} 2 \\ 3 \end{bmatrix}  = \begin{bmatrix} -2 \\ -1 \end{bmatrix}$.
+  \item \begin{answer}
+         $t = - 3x + 2y$ and $t' = 2x - y$.
+       \end{answer}
+       In terms of an arbitrary $x$ and $y$, we have
+       
+       $t + 2t' = x$
+       
+       $2t + 3t' = y$
+       
+       and we can solve by isolating the unknowns. Subtracting twice the first equation from second gives $t' = 2x - y$. Substitution into the second equation gives $t = - 3x + 2y$.
+       
+       For $(x, y) = (4, 5)$, $t = -3(4) + 2(5) = -2$ and $t' = 2(4) - 5 = 3$.
+       
+       For $(x, y) = (-2, -1)$, $t = -3(-2) + 2(-1) = 4$ and $t' = 2(-2) - (-1) = -3$.
+
+\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.4}
+\begin{exercise}
+On square grids, draw your answers to Exercise 1.3(a) and 1.3(b).
+\end{exercise}
+
+\begin{solution}
+% your answer here
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.5}
+\begin{exercise}
+For each vector $\vect{v}$, compute and draw
+$-\vect{v}$, $2\vect{v}$, $\tfrac{1}{2}\vect{v}$, and $-\tfrac{4}{3}\vect{v}$.
+\begin{enumerate}
+  \item $\vect{v} = \begin{bmatrix} 2 \\ 3 \end{bmatrix}$
+  \item $\vect{v} = \begin{bmatrix} 1 \\ -2 \end{bmatrix}$
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item \begin{answer}
+         $\mathbf{v} = \begin{bmatrix} 2 \\ 3 \end{bmatrix}$,
+         $-\mathbf{v} = \begin{bmatrix} -2 \\ -3 \end{bmatrix}$,
+         $2\mathbf{v} = \begin{bmatrix} 4 \\ 6 \end{bmatrix}$,
+         $\frac{1}{2}\mathbf{v} = \begin{bmatrix} 1 \\ \frac{3}{2} \end{bmatrix}$, and
+         $-\frac{4}{3}\mathbf{v} = \begin{bmatrix} -\frac{8}{3} \\ -4 \end{bmatrix}$.
+       \end{answer}
+       Scalar multiplication multiplies each entry by the scalar (Definition 1.3.2).
+  \item \begin{answer}
+         $\mathbf{v} = \begin{bmatrix} 1 \\ -2 \end{bmatrix}$,
+         $-\mathbf{v} = \begin{bmatrix} -1 \\ 2 \end{bmatrix}$,
+         $2\mathbf{v} = \begin{bmatrix} 2 \\ -4 \end{bmatrix}$,
+         $\frac{1}{2}\mathbf{v} = \begin{bmatrix} \frac{1}{2} \\ -1 \end{bmatrix}$, and
+         $-\frac{4}{3}\mathbf{v} = \begin{bmatrix} -\frac{4}{3} \\ \frac{8}{3} \end{bmatrix}$.
+       \end{answer}
+       Scalar multiplication multiplies each entry by the scalar (Definition 1.3.2).
+
+\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.6}
+\begin{exercise}
+For each pair of 2-vectors $\vect{v}, \vect{w}$, compute and draw
+$\vect{v}+\vect{w}$, $\vect{v}-\vect{w}$, $2\vect{w}$, $3\vect{w}$,
+$\vect{v}+2\vect{w}$, and $\vect{v}+3\vect{w}$.
+\begin{enumerate}
+  \item $\vect{v} = \begin{bmatrix} 3 \\ 1 \end{bmatrix}$,
+        $\vect{w} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$
+  \item $\vect{v} = \begin{bmatrix} 3 \\ 1 \end{bmatrix}$,
+        $\vect{w} = \begin{bmatrix} -1 \\ -2 \end{bmatrix}$
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item 
+  	\begin{answer}
+	$\mathbf{v} + \mathbf{w} = \begin{bmatrix} 4 \\ 3 \end{bmatrix}$
+	
+	$\mathbf{v} - \mathbf{w} = \begin{bmatrix} 2 \\ -1 \end{bmatrix}$
+	
+	$2\mathbf{w} = \begin{bmatrix} 2 \\ 4 \end{bmatrix}$
+	
+	$3\mathbf{w} = \begin{bmatrix} 3 \\ 6 \end{bmatrix}$
+	
+	$\mathbf{v} + 2\mathbf{w} = \begin{bmatrix} 5 \\ 5 \end{bmatrix}$
+	
+	$\mathbf{v} + 3\mathbf{w} = \begin{bmatrix} 6 \\ 7 \end{bmatrix}$
+	\end{answer}
+	
+	 Scalar multiplication multiplies each entry by the scalar (Definition 1.3.2); vector addition adds matching entries (Definition 1.3.1).
+	
+  \item \begin{answer}
+	$\mathbf{v} + \mathbf{w} = \begin{bmatrix} 2 \\ -1 \end{bmatrix}$
+	
+	$\mathbf{v} - \mathbf{w} = \begin{bmatrix} 4 \\ 3 \end{bmatrix}$
+	
+	$2\mathbf{w} = \begin{bmatrix} -2 \\ -4 \end{bmatrix}$
+	
+	$3\mathbf{w} = \begin{bmatrix} -3 \\ -6 \end{bmatrix}$
+	
+	$\mathbf{v} + 2\mathbf{w} = \begin{bmatrix} 1 \\ -3 \end{bmatrix}$
+	
+	$\mathbf{v} + 3\mathbf{w} = \begin{bmatrix} 0 \\ -5 \end{bmatrix}$
+	\end{answer}
+	
+	 Scalar multiplication multiplies each entry by the scalar (Definition 1.3.2); vector addition adds matching entries (Definition 1.3.1).
+\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.7}
+\begin{exercise}
+Example~1.3.8 claims that for 2-vectors $\vect{v}, \vect{w}$ and
+$0 \le t \le 1$, the convex combination $(1-t)\vect{v} + t\vect{w}$ lies on the
+segment joining the tips of $\vect{v}$ and $\vect{w}$. For each case below,
+verify this directly:
+\begin{itemize}
+  \item find the equation of the line $L$ through the tips of $\vect{v}$ and $\vect{w}$;
+  \item check that $(1-t)\vect{v} + t\vect{w}$ satisfies that equation;
+  \item use $x$-coordinates to confirm the point lies between $\vect{v}$ and $\vect{w}$.
+\end{itemize}
+Draw the case $t = 1/4$, showing $L$, $\vect{v}$, and $\vect{w}$. Also sketch the
+region of all vectors $r\vect{v} + s\vect{w}$ with $r, s \ge 0$ and $r + s \le 1$.
+(Hint: $r\vect{v} + s\vect{w} = r\vect{v} + s\vect{w} + (1-r-s)\vect{0}$ is a
+convex combination.)
+\begin{enumerate}
+  \item $\vect{v} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$,
+        $\vect{w} = \begin{bmatrix} 0 \\ 2 \end{bmatrix}$
+  \item $\vect{v} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$,
+        $\vect{w} = \begin{bmatrix} 2 \\ -1 \end{bmatrix}$
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item 
+  	\begin{answer}
+	$y = -2(x - 1)$;
+	
+	$2t = -2(1 - t) + 2$;
+	
+	$0 \le t \le 1$ gives $0 \le 1 - t \le 1$, so the point's x-coordinate lies somewhere between $\vect{v}$'s x-coordinate (1) and $\vect{w}$'s x-coordinate (0).
+	\end{answer}
+	The slope of a line through $\begin{bmatrix} 1 \\ 0 \end{bmatrix}$ and $\begin{bmatrix} 0 \\ 2 \end{bmatrix}$ is $-2$. The point-slope form of the line is $y = -2(x - 1)$ or $y = -2x + 2$. 
+	
+	$(1 - t)\vect{v} + t\vect{w} = (1-t)\begin{bmatrix} 1 \\ 0 \end{bmatrix} + t\begin{bmatrix} 0 \\ 2 \end{bmatrix} = \begin{bmatrix} 1 - t \\ 0 \end{bmatrix} + \begin{bmatrix} 0 \\ 2t \end{bmatrix} = \begin{bmatrix} 1 - t \\ 2t \end{bmatrix}$.
+	
+	Substituting into the line's equation, $2t = -2(1 - t) + 2$. The fact that $-2(1 - t) + 2$ simplifies to $2t$ demonstrates that the line's equation holds for every value of $t$, and every point $(1 - t)\vect{v} + t\vect{w}$ is a point on line $L$. $0 \le t \le 1$ gives $0 \le 1 - t \le 1$, so the point's x-coordinate lies somewhere between $\vect{v}$'s x-coordinate (1) and $\vect{w}$'s x-coordinate (0).
+	
+  \item \begin{answer}
+	$y + 1 = -3(x - 2)$;
+	
+	$-3t + 2 = -3(t + 1) + 5$;
+	
+	$0 \le t \le 1$ gives $1 \le t + 1 \le 2$, so the point's x-coordinate lies somewhere between $\vect{v}$'s x-coordinate (1) and $\vect{w}$'s x-coordinate (2).
+	\end{answer}
+	The slope of a line through $\begin{bmatrix} 1 \\ 2 \end{bmatrix}$ and $\begin{bmatrix} 2 \\ -1 \end{bmatrix}$ is $-3$. The point-slope form of the line is $y + 1 = -3(x - 2)$ or $y = -3x + 5$. 
+	
+	$(1 - t)\vect{v} + t\vect{w} = (1-t)\begin{bmatrix} 1 \\ 2 \end{bmatrix} + t\begin{bmatrix} 2 \\ -1 \end{bmatrix} = \begin{bmatrix} 1 - t \\ 2 - 2t \end{bmatrix} + \begin{bmatrix} 2t \\ -t \end{bmatrix} = \begin{bmatrix}t + 1\\-3t + 2 \end{bmatrix}$.
+	
+	Substituting into the line's equation, $-3t + 2 = -3(t + 1) + 5$. The fact that $-3(t + 1) + 5$ simplifies to $-3t + 2$ demonstrates that the line's equation holds for every value of $t$, and every point $(1 - t)\vect{v} + t\vect{w}$ is a point on line $L$. $0 \le t \le 1$ gives $1 \le t + 1 \le 2$, so the point's x-coordinate lies somewhere between $\vect{v}$'s x-coordinate (1) and $\vect{w}$'s x-coordinate (2).
+
+\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.8}
+\begin{exercise}
+Eight students (student $1, \dots, 8$) take the same five courses
+$C_1, \dots, C_5$ in their first quarter at Stanford. Courses $C_1$ and $C_2$ are worth
+5 units, $C_3$ is worth 4 units, and $C_4$ and $C_5$ are worth 3 units
+(20 units total). Let $\vect{v}_i$ be the 8-vector whose $j$th entry is
+student $j$'s grade in course $C_i$, using
+$\text{A+} = 4.3$, $\text{A} = 4.0$, $\text{A}- = 3.7$, and so on.
+\begin{enumerate}
+  \item Each course grade is weighted in the grade point average (GPA) by the
+        course's units. Write a linear combination of the $\vect{v}_i$ whose
+        $j$th entry is student $j$'s GPA. Check that it is a convex combination,
+        and explain why it must be convex no matter what the unit values are.
+  \item Student 1 earned three A+'s and two A's; student 2 earned two A+'s and
+        three A's. Assign these grades to courses so that the two students
+        have the same GPA.
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item \begin{answer}
+  $0.25\mathbf{v}_1 + 0.25\mathbf{v}_2 + 0.2\mathbf{v}_3 + 0.15\mathbf{v}_4 + 0.15\mathbf{v}_5$  
+		\end{answer}
+	For $n$-vectors $\mathbf{v}_1$, $\hdots$, $\mathbf{v}_k$, a \emph{convex combination} means a linear combination $t_1\mathbf{v}_1 + \hdots + t_k\mathbf{v}_k$ for which all $t_j \ge 0$ and $t_1 + \hdots + t_k = 1$.
+	
+	Weighting courses by unit proportion of twenty units gives us proportions $\frac{5}{20} = \frac{1}{4}$ for courses $C_1$ and $C_2$ (5 units of 20 units), $\frac{1}{5}$ for course $C_3$ (4 units of 20), and $\frac{3}{20}$ for courses $C_4$ and $C_5$ (3 units of 20).
+	
+	If $\mathbf{v}_i$ is the 8-vector whose $j$th entry is student $j$'s grade in course $C_i$, the linear combination of the $\mathbf{v}_i$ whose $j$th entry is student $j$'s GPA is
+	
+	$0.25\mathbf{v}_1 + 0.25\mathbf{v}_2 + 0.2\mathbf{v}_3 + 0.15\mathbf{v}_4 + 0.15\mathbf{v}_5$  
+	
+	This is a convex combination because units are never negative (all $t_j \ge 0$) and each course $C_i$'s weight is a proportion of the total units such that all weights sum to 1 ($t_1 + ... + t_k = 1$): $0.25 + 0.25 + 0.2 + 0.15 + 0.15 = 1$.
+	
+  \item 
+  	\begin{answer}
+	$\vect{v}_1 = \begin{bmatrix}4.0 \\ 4.3 \\ \vdots \\ v_{1,8}\end{bmatrix}$
+	$\vect{v}_2 = \begin{bmatrix}4.0 \\ 4.3\\ \vdots \\ v_{2,8}\end{bmatrix}$
+	$\vect{v}_3 = \begin{bmatrix}4.3 \\ 4.0\\ \vdots \\ v_{3,8}\end{bmatrix}$
+	$\vect{v}_4 = \begin{bmatrix}4.3 \\ 4.0\\ \vdots \\ v_{4,8}\end{bmatrix}$
+	$\vect{v}_5 = \begin{bmatrix}4.3 \\ 4.0\\ \vdots \\ v_{5,8}\end{bmatrix}$
+	\end{answer}
+	Classes $C_1$ and $C_2$ together contribute half of the GPA, while classes $C_3$, $C_4$, and $C_5$ together contribute the other half; these two groups are evenly weighted. This means that student 1 and student 2 will earn the same GPA if one of them earns an A+ in courses $C_1$ and $C_2$ and an A in courses $C_3$, $C_4$, and $C_5$, while the other earns an A in courses $C_1$ and $C_2$ and an A+ in courses $C_3$, $C_4$, and $C_5$. The GPA is 4.15.
+	
+	
+	\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.9}
+\begin{exercise}
+Compute the distance between $\vect{v}$ and $\vect{w}$.
+\begin{enumerate}
+  \item $\vect{v} = \begin{bmatrix} -2 \\ 2 \end{bmatrix}$,
+        $\vect{w} = \begin{bmatrix} 1 \\ -2 \end{bmatrix}$
+  \item $\vect{v} = \begin{bmatrix} 3 \\ -1 \\ 4 \\ 1 \end{bmatrix}$,
+        $\vect{w} = \begin{bmatrix} -2 \\ 3 \\ 3 \\ -2 \end{bmatrix}$
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item 
+  	\begin{answer}
+		The distance between vectors $\vect{v}$ and $\vect{w}$, $\norm{\vect{v} - \vect{w}}$, is $\sqrt{3^2 + 4^2} = \sqrt{25} = 5$.
+	\end{answer}
+	$\norm{\begin{bmatrix}-2\\2\end{bmatrix} - \begin{bmatrix}1\\-2\end{bmatrix}} = \norm{\begin{bmatrix}-3\\4\end{bmatrix}}
+	= \sqrt{(-3)^2 + 4^2} = \sqrt{25} = 5$
+
+	
+  \item 
+  	\begin{answer}
+		The distance between vectors $\vect{v}$ and $\vect{w}$, $\norm{\vect{v} - \vect{w}}$, is $\sqrt{5^2 + 4^2 + 1^2 + 3^2} = \sqrt{51}$.
+	\end{answer}
+	
+		$\norm{\begin{bmatrix}3\\-1\\4\\1\end{bmatrix} - \begin{bmatrix}-2\\3\\3\\-2\end{bmatrix}} = 
+		\norm{\begin{bmatrix}5\\-4\\1\\3\end{bmatrix}}
+		=\sqrt{5^2 + (-4)^2 + 1^2 + 3^2} = \sqrt{51}$
+		
+		The distance between two $n$-vectors $\vect{x}$ and $\vect{y}$ is $\norm{\vect{x} - \vect{y}}$ (Definition 1.6.4) and can be found by applying the $n$-dimensional version of the Pythagorean theorem (Definition 1.6.1).
+\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.10}
+\begin{exercise}
+Compute $\norm{\vect{v}}$ and the unit vector pointing in the same direction
+as $\vect{v}$.
+\begin{enumerate}
+  \item $\vect{v} = \begin{bmatrix} 1 \\ 3 \\ -1 \end{bmatrix}$
+  \item $\vect{v} = \begin{bmatrix} -8 \\ 15 \end{bmatrix}$
+  \item $\vect{v} = \begin{bmatrix} 1 \\ 1 \\ \vdots \\ 1 \end{bmatrix}$,
+        an $n$-vector (answer in terms of $n$)
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item 
+  	\begin{answer}
+	  	$\norm{\vect{v}} = \sqrt{11}$;
+	
+		$\frac{\vect{v}}{\norm{\vect{v}}} = \begin{bmatrix}
+			\frac{1}{\sqrt{11}}\\
+			\frac{3}{\sqrt{11}}\\
+			\frac{-1}{\sqrt{11}}
+		\end{bmatrix}$
+	\end{answer}
+	
+	$\norm{\vect{v}} = \sqrt{1^2 + 3^2 + (-1)^2} = \sqrt{11}$ and $\frac{\vect{v}}{\norm{\vect{v}}} =
+	\begin{bmatrix}
+		\frac{1}{\sqrt{11}}\\
+		\frac{3}{\sqrt{11}}\\
+		\frac{-1}{\sqrt{11}}
+	\end{bmatrix}$
+	
+	$\sqrt{(\frac{1}{\sqrt{11}})^2 + (\frac{3}{\sqrt{11}})^2 + (\frac{-1}{\sqrt{11}})^2} = \sqrt{\frac{1}{11} + \frac{9}{11} + \frac{1}{11}} = 1$
+	
+  \item
+  \begin{answer}
+  $\norm{\vect{v}} = 17$;
+  
+      $\frac{\vect{v}}{\norm{\vect{v}}} = \begin{bmatrix}
+			\frac{-8}{17} \\ \frac{15}{17}
+		\end{bmatrix}$
+\end{answer}
+		$\norm{\vect{v}} = \sqrt{(-8)^2 + 15^2} = 17$ and $\frac{\vect{v}}{\norm{\vect{v}}} = 
+		\begin{bmatrix}
+			\frac{-8}{17} \\ \frac{15}{17}
+		\end{bmatrix}$
+  \item
+  	\begin{answer}
+	$\norm{\vect{v}} = \sqrt{n}$;
+	
+	
+		$\frac{\vect{v}}{\norm{\vect{v}}} = \begin{bmatrix}
+			\frac{1}{\sqrt{n}}\\
+			\vdots\\
+			\frac{1}{\sqrt{n}}
+		\end{bmatrix}$
+	\end{answer}
+  
+  	$\norm{\vect{v}} = \sqrt{n}$ and $\frac{\vect{v}}{\norm{\vect{v}}} = 
+	\begin{bmatrix}
+		\frac{1}{\sqrt{n}}\\
+		\vdots\\
+		\frac{1}{\sqrt{n}}
+	\end{bmatrix}
+	$
+  
+  The unit vector pointing in the same direction as $\vect{v}$ can be obtained by scaling $\vect{v}$ by $\frac{1}{\norm{\vect{v}}}$ (Section 1.7).
+\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.11}
+\begin{exercise}
+The \emph{polarization identity} states that for all $n$-vectors $\vect{v}, \vect{w}$,
+\[
+  \norm{\vect{v}+\vect{w}}^2 + \norm{\vect{v}-\vect{w}}^2
+  = 2\norm{\vect{v}}^2 + 2\norm{\vect{w}}^2 .
+\]
+(Book Figure~1.8.1 shows the parallelogram in $\R^3$ formed by two 3-vectors
+$\vect{v}$ and $\vect{w}$; its diagonals are the vectors $\vect{v}+\vect{w}$ and
+$\vect{v}-\vect{w}$.)
+\begin{enumerate}
+  \item For $n = 2$, cut the parallelogram in half along a diagonal and apply the
+        Law of Cosines to each resulting triangle, taking the diagonal as the side
+        opposite the angle used. Do this for both diagonals to prove the identity.
+  \item For general $n$, establish the polarization identity by algebraic calculation with the definition of
+“length” for $n$-vectors.\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item
+  	\begin{answer}
+	
+	The law of cosines, $c^2 = a^2 + b^2 - 2ab\cos (C)$, where $a$, $b$, and $c$ are side lengths and $C$ is the angle opposite side $c$, generalizes the Pythagorean Theorem to apply to all triangles. Assuming $n = 2$ and applying this law to the two halves of the parallelogram with $\theta$ as the angle at the origin between $\vect{v}$ and $\vect{w}$ and opposite the diagonal $\vect{v} - \vect{w}$,
+	
+	\vspace{\baselineskip}
+	$\norm{\vect{v} - \vect{w}}^2 = 
+	\norm{\vect{v}}^2 + \norm{\vect{w}}^2 - 2\norm{\vect{v}}\norm{\vect{w}}\cos (\theta)$,
+	
+	\vspace{\baselineskip}
+	and
+	
+	\vspace{\baselineskip}
+	$\norm{\vect{v} + \vect{w}}^2 = 
+	\norm{\vect{v}}^2 + \norm{\vect{w}}^2 - 2\norm{\vect{v}}\norm{\vect{w}}\cos (180^\circ - \theta)$
+	because consecutive angles of a parallelogram are supplementary. 
+
+	\vspace{\baselineskip}	
+	Because $\cos (180^\circ - \theta) = -\cos \theta$, we can rewrite the second equation as
+	$\norm{\vect{v} + \vect{w}}^2 = 
+	\norm{\vect{v}}^2 + \norm{\vect{w}}^2 - 2\norm{\vect{v}}\norm{\vect{w}}(-\cos\theta) = \norm{\vect{v}}^2 + \norm{\vect{w}}^2 + 2\norm{\vect{v}}\norm{\vect{w}}\cos (\theta)$.
+	
+	\vspace{\baselineskip}
+	The final terms cancel when adding the two equations, and we get the polarization identity
+	$\norm{\vect{v} + \vect{w}}^2 + \norm{\vect{v} - \vect{w}}^2 = 2\norm{\vect{v}}^2 + 2\norm{\vect{w}}^2$.
+  
+  	\end{answer}
+  
+  \item
+    \begin{answer}
+    
+   For a general $n$,  the $n$-dimensional Pythagorean Theorem (definition 1.6.1) $\norm{\vect{v}} = \sqrt{v_1^2 + \hdots + v_n^2}$ gives us the length of an $n$-vector. And because squaring cancels a square root, the square of vector $\vect{v}$'s length is the sum of its terms' squares $v_1^2 + \hdots + v_n^2$. When we take the difference between $n$-vectors $\vect{v}$ and $\vect{w}$, the result is a new $n$-vector with entries $v_i - w_i$; summing two vectors gives us an $n$-vector with entries $v_i + w_i$.
+   
+   \vspace{\baselineskip}
+   By the definitions of vector addition and scalar multiplication by $-1$ (Definitions 1.3.1 and 1.3.2), we can write the $i$th term of the left side of the identity according to the length as $(v_i + w_i)^2 + (v_i - w_i)^2$, and then expand terms as $v_i^2 +2v_iw_i +w_i^2 + v_i^2 - 2v_iw_i + w_i^2$  to cancel terms and arrive at $2v_i^2 + 2w_i^2$. Because the sum of the squares of a vector's entries equals the square of its length, we know \texttt{•}hat
+
+$\sum_{i=1}^{n} [(v_i + w_i)^2 + (v_i - w_i)^2] = \sum_{i=1}^{n} [2(v_i)^2 + 2(w_i)^2]$
+
+says the same thing as
+
+$\norm{\vect{v} + \vect{w}}^2 + \norm{\vect{v} - \vect{w}}^2 = 2\norm{\vect{v}}^2 + 2\norm{\vect{w}}^2$.
+   
+    
+  \end{answer}
+  
+\end{enumerate}
+\end{solution}
+
+% =====================================================================
+\section*{Exercise 1.12}
+\begin{exercise}
+The \emph{$K$-means algorithm}, mentioned in Example~1.6.13, is one of the
+simplest algorithms in ``unsupervised machine learning.'' This exercise explains
+the algorithm and asks you to run it. You do not need to read Example~1.6.13 or
+know anything about computers or machine learning.
+
+We are given data points $\vect{x}_1, \dots, \vect{x}_m \in \R^n$ and a whole
+number $K$, and we want to sort the data into $K$ clusters of points that are
+near one another. The sorting should follow a step-by-step procedure that can be
+applied to large data sets, especially when $n > 3$, where the data cannot be
+pictured. The algorithm is:
+\begin{enumerate}[label=(\arabic*)]
+  \item Choose any $K$ distinct points from the data and call them
+        $\vect{C}_1, \dots, \vect{C}_K$.
+  \item For each $\vect{x}_i$, find the $\vect{C}_j$ nearest to it (assume there
+        are no ties: no $\vect{x}_i$ is equally far from two different
+        $\vect{C}_j$'s). Grouping each $\vect{x}_i$ with its nearest $\vect{C}_j$
+        splits the data into $K$ clusters.
+  \item For each $j$, replace $\vect{C}_j$ with the average of the $\vect{x}_i$'s
+        in the $j$th cluster.
+  \item Go back to Step (2) with the new $\vect{C}_j$'s from Step (3), and keep
+        repeating until the process stops, meaning that some pass through
+        Steps (2) and (3) ends with the same $K$ clusters it started with.
+\end{enumerate}
+Six consumers rate Coca-Cola (first entry) and Pepsi (second entry) from 1
+(dislike very much) to 5 (like very much):
+\[
+  \vect{x}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix},\;
+  \vect{x}_2 = \begin{bmatrix} 1 \\ 5 \end{bmatrix},\;
+  \vect{x}_3 = \begin{bmatrix} 2 \\ 4 \end{bmatrix},\;
+  \vect{x}_4 = \begin{bmatrix} 3 \\ 1 \end{bmatrix},\;
+  \vect{x}_5 = \begin{bmatrix} 3 \\ 2 \end{bmatrix},\;
+  \vect{x}_6 = \begin{bmatrix} 4 \\ 1 \end{bmatrix}.
+\]
+Use $K = 2$.
+\begin{enumerate}
+  \item Start with $\vect{C}_1 = \vect{x}_4$ and $\vect{C}_2 = \vect{x}_5$ and run
+        the algorithm. You may omit the distance computations, but give each
+        pass's averages exactly, as vectors with fractional entries.
+  \item Repeat with $\vect{C}_1 = \vect{x}_2$ and $\vect{C}_2 = \vect{x}_3$.
+        (You should end with the same two clusters as in (a), with their
+        labels swapped.)
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\begin{enumerate}
+  \item
+  
+  \begin{answer}
+  $\{\vect{x}_1, \vect{x}_4, \vect{x}_5, \vect{x}_6\}$ and $\{\vect{x}_2, \vect{x}_3 \}$
+  \end{answer}
+  
+  If we begin with $\vect{C}_1 = \vect{x}_4$ and $\vect{C}_2 = \vect{x}_5$, then passes are as follows:
+  
+  \textbf{pass one}
+  
+ The two clusters are $ \{\vect{x}_1, \vect{x}_4, \vect{x}_6\}$ and  $\{\vect{x}_2, \vect{x}_3, \vect{x}_5\}$.
+  
+  We update the cluster centroids as $\vect{C}_1 = (\vect{x}_1 + \vect{x}_4 + \vect{x}_6)/3
+  = \begin{bmatrix}(1 + 3 + 4) / 3 \\ (1 + 1 + 1)/3\end{bmatrix} = \begin{bmatrix}\frac{8}{3} \\ 1\end{bmatrix}$
+  
+  and $\vect{C}_2 = (\vect{x}_2 + \vect{x}_3 +  \vect{x}_5) / 3 = \begin{bmatrix}(1 + 2 + 3)/3\\(5 + 4 + 2)/3\end{bmatrix} = \begin{bmatrix}2\\\frac{11}{3}\end{bmatrix}$.
+  
+    \textbf{pass two}
+    
+    The two clusters are $\{\vect{x}_1, \vect{x}_4, \vect{x}_5, \vect{x}_6\}$ and $\{\vect{x}_2, \vect{x}_3\}$.
+ 
+  The algorithm continues because $\vect{x}_5$ moved clusters, and we update the cluster centroids as
+  
+  $\vect{C}_1 = (\vect{x}_1 + \vect{x}_4 + \vect{x}_5 + \vect{x}_6)/4
+  = \begin{bmatrix}(1 + 3 + 3 + 4) / 4 \\ (1 + 1 + 2 + 1)/4\end{bmatrix} = \begin{bmatrix}\frac{11}{4} \\ \frac{5}{4}\end{bmatrix}$
+  
+  and $\vect{C}_2 = (\vect{x}_2 + \vect{x}_3 ) / 2 = \begin{bmatrix}(1 + 2)/2\\(5 + 4)/2\end{bmatrix} = \begin{bmatrix}\frac{3}{2}\\\frac{9}{2}\end{bmatrix}$.
+ 
+  
+  \textbf{pass three}
+    
+   The two clusters are still $\{\vect{x}_1, \vect{x}_4, \vect{x}_5, \vect{x}_6\}$ and $\{\vect{x}_2, \vect{x}_3\}$, and the algorithm halts because no data points moved clusters.
+    
+  
+  \item
+  
+    \begin{answer}
+  $\{\vect{x}_2, \vect{x}_3 \}$ and $\{\vect{x}_1, \vect{x}_4, \vect{x}_5, \vect{x}_6\}$
+  \end{answer}
+  
+  If we begin with $\vect{C}_1 = \vect{x}_2$ and $\vect{C}_2 = \vect{x}_3$, then the passes are as follows:
+  
+  \textbf{pass one}
+  
+ The two clusters are $ \{\vect{x}_2\}$ and  $\{\vect{x}_1, \vect{x}_3, \vect{x}_4, \vect{x}_5, \vect{x}_6\}$.
+ 
+ We update the cluster centroids as $\vect{C}_1 = (\vect{x}_2 )/1
+  = \begin{bmatrix}1 \\ 5\end{bmatrix}$ and $\vect{C}_2 = (\vect{x}_1 + \vect{x}_3 + \vect{x}_4 + \vect{x}_5 + \vect{x}_6)/5
+  = \begin{bmatrix}(1 + 2 + 3 + 3 + 4) / 5 \\ (1 + 4 + 1 + 2+ 1)/5\end{bmatrix} = \begin{bmatrix}\frac{13}{5} \\ \frac{9}{5}\end{bmatrix}$.
+  
+  \textbf{pass two}
+  
+  The two clusters are $ \{\vect{x}_2, \vect{x}_3\}$ and  $\{\vect{x}_1, \vect{x}_4, \vect{x}_5, \vect{x}_6\}$.   The algorithm continues because $\vect{x}_3$ moved clusters, and we update the cluster centroids as
+  $\vect{C}_1 = (\vect{x}_2 + \vect{x}_3)/2
+  = \begin{bmatrix}(1 + 2)/2\\(5 + 4)/2\end{bmatrix} = \begin{bmatrix}\frac{3}{2} \\ \frac{9}{2}\end{bmatrix}$ and $\vect{C}_2 = (\vect{x}_1 + \vect{x}_4 + \vect{x}_5 + \vect{x}_6)/4
+  = \begin{bmatrix}(1 + 3 + 3 + 4) / 4 \\ (1 + 1 + 2 + 1)/4\end{bmatrix} = \begin{bmatrix}\frac{11}{4} \\ \frac{5}{4}\end{bmatrix}$.
+  
+    \textbf{pass three}
+    
+   The two clusters are still $\{\vect{x}_2, \vect{x}_3\}$ and $\{\vect{x}_1, \vect{x}_4, \vect{x}_5, \vect{x}_6\}$, and the algorithm halts because no data points moved clusters. These are indeed the same two clusters as in (a), but with labels swapped.
+  
+\end{enumerate}
+\end{solution}
+
+\end{document}
